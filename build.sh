@@ -9,4 +9,4 @@ docker build -t chunjiesamliu/tep-pipeline:0.1 .
 
 echo "-----------------------Image built done-----------------------"
 
-docker run --rm chunjiesamliu/tep-pipeline:0.1
+docker run -it --rm chunjiesamliu/tep-pipeline:0.1

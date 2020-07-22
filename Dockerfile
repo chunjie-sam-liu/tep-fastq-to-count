@@ -1,14 +1,18 @@
 FROM ubuntu:20.04
 LABEL maintainer="Chun-Jie Liu <chunjie.sam.liu@gmail.com>"
 
-ENV SHELL /usr/bin/bash
 
+
+# install fastqc
 RUN apt-get update -qq \
-  && apt-get -y --no-install-recommends install ping
+  && apt-get -y  --no-install-recommends install fastqc
 
-# ENTRYPOINT ["/bin/echo", "Hello"]
 
-# CMD [ "/bin/echo", "Hello world" ]
+# reference data
+# create user
+RUN groupadd -g 2000 vault \
+  && useradd -m -s /usr/bin/bash -u 2001 -g vault vault
+USER vault
+WORKDIR /home/vault
 
-# CMD [ "ping", "localhost" ]
-CMD [ "" ]
+ENTRYPOINT [ "/usr/bin/id" ]

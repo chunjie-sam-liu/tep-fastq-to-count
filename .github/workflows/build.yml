@@ -1,0 +1,17 @@
+on: push
+name: Build & Push containers
+jobs:
+  dockerRegistry:
+    name: Docker Registry
+    runs-on: ubuntu:20.04
+    steps:
+      - uses: actions/checkout@master
+      - name: Docker Registry
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: Building Docker Image
+        run: docker build -t chunjiesamliu/tep-pipeline:0.1 .
+      - name: Push Docker Image To Registry
+        run: docker push chunjiesamliu/tep-pipeline:0.1
