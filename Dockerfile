@@ -9,7 +9,7 @@ RUN apt-get update -qq \
   build-essential \
   python2.7-dev \
   python-numpy \
-  python-matplotlib \
+  # python-matplotlib \
   python-pysam \
   python-htseq \
   && apt-get clean \
