@@ -5,8 +5,15 @@ LABEL maintainer="Chun-Jie Liu <chunjie.sam.liu@gmail.com>"
 
 # install fastqc
 RUN apt-get update -qq \
-  && apt-get -y  --no-install-recommends install fastqc
-
+  && apt-get -y --no-install-recommends install \
+  fastqc \
+  rna-star \
+  build-essential \
+  python2.7-dev \
+  python-numpy \
+  python-matplotlib \
+  python-pysam \
+  python-htseq
 
 # reference data
 # create user
