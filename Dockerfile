@@ -22,4 +22,4 @@ RUN groupadd -g 2000 vault \
 USER vault
 WORKDIR /home/vault
 
-ENTRYPOINT [ "/usr/bin/id" ]
+ENTRYPOINT [ "/usr/bin/bash" ]
