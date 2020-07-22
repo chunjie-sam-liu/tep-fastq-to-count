@@ -6,10 +6,11 @@ RUN apt-get update -qq \
   && apt-get -y --no-install-recommends install \
   fastqc \
   rna-star \
-  python3.8 \
-  python3.8-dev \
-  python3.8-distutils \
-  python3.8-venv \
+  python3 \
+  python3-pip \
+  # python3-dev \
+  # python3-distutils \
+  # python3-venv \
   # build-essential \
   # python2.7-dev \
   # python-numpy \
