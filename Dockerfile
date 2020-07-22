@@ -6,12 +6,16 @@ RUN apt-get update -qq \
   && apt-get -y --no-install-recommends install \
   fastqc \
   rna-star \
-  build-essential \
-  python2.7-dev \
-  python-numpy \
-  # python-matplotlib \
-  python-pysam \
-  python-htseq \
+  python3.8 \
+  python3.8-dev \
+  python3.8-distutils \
+  python3.8-venv \
+  # build-essential \
+  # python2.7-dev \
+  # python-numpy \
+  # # python-matplotlib \
+  # python-pysam \
+  # python-htseq \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
