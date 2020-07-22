@@ -8,15 +8,8 @@ RUN apt-get update -qq \
   rna-star \
   python3 \
   python3-pip \
-  # python3-dev \
-  # python3-distutils \
-  # python3-venv \
-  # build-essential \
-  # python2.7-dev \
-  # python-numpy \
-  # # python-matplotlib \
-  # python-pysam \
-  # python-htseq \
+  && ln -s /usr/bin/python3.8 /usr/bin/python \
+  && ln -s /usr/bin/pip3 /usr/bin/pip \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
