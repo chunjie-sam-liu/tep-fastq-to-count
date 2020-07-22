@@ -11,13 +11,16 @@ RUN apt-get update -qq \
   python-numpy \
   python-matplotlib \
   python-pysam \
-  python-htseq
+  python-htseq \
+  && apt-get clean \
+  && apt-get autoremove \
+  && rm -rf /var/lib/apt/lists/*
 
 # reference data
 # create user
 RUN groupadd -g 2000 vault \
   && useradd -m -s /usr/bin/bash -u 2001 -g vault vault
-USER vault
+# USER vault
 WORKDIR /home/vault
 
 ENTRYPOINT [ "/usr/bin/bash" ]
