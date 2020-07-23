@@ -9,5 +9,5 @@ STAR --runThreadN 20 \
   --runMode genomeGenerate \
   --genomeDir /refdata \
   --genomeFastaFiles /refdata/hg19.fa \
-  --sjdbGTFfile /refdata/gencode.v19.annotation.gtf \
+  --sjdbGTFfile /refdata/Homo_sapiens.GRCh37.75.gtf \
   --sjdbOverhang 100
