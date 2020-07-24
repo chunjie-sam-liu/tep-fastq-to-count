@@ -5,21 +5,30 @@
 # @DESCRIPTION:
 
 # Number of input parameters
+
 docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
   -v /home/liucj/tmp/tep-mapping:/home/vault \
   chunjiesamliu/tep-pipeline:0.1 \
-  STAR --runMode alignReads \
-  --runThreadN 40 \
-  --genomeDir /refdata \
-  --quantMode TranscriptomeSAM GeneCounts \
-  --outSAMtype BAM SortedByCoordinate \
-  --outFileNamePrefix ERR1769022_ \
-  --outSJfilterReads Unique \
-  --outSAMattrRGline ID:ERR1769022 SM:ERR1769022 PL:ILLUMINA \
-  --alignIntronMin 20 \
-  --alignIntronMax 50000 \
-  --outFilterMismatchNmax 5 \
-  --outSAMmultNmax 1 \
-  --outSAMmapqUnique 60 \
+  STAR --genomeDir /refdata \
+  --readFilesIn ERR1769022_1.fastq.gz ERR1769022_2.fastq.gz \
   --readFilesCommand gunzip -c \
-  --readFilesIn ERR1769022_1.fastq.gz ERR1769022_2.fastq.gz
+  --runThreadN 64 \
+  --genomeLoad NoSharedMemory \
+  --outFilterMultimapNmax 20 \
+  --alignSJoverhangMin 8 \
+  --alignSJDBoverhangMin 1 \
+  --outFilterMismatchNmax 999 \
+  --outFilterMismatchNoverReadLmax 0.04 \
+  --alignIntronMin 20 \
+  --alignIntronMax 1000000 \
+  --alignMatesGapMax 1000000 \
+  --outSAMheaderHD @HD VN:1.4 SO:coordinate \
+  --outSAMunmapped Within \
+  --outFilterType BySJout \
+  --outSAMattributes NH HI AS NM MD \
+  --outSAMtype BAM SortedByCoordinate \
+  --quantMode TranscriptomeSAM \
+  --sjdbScore 1 \
+  --limitBAMsortRAM 20000000000 \
+  --outFileNamePrefix map_ERR1769022_
+
