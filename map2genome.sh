@@ -27,8 +27,9 @@ docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
   --outFilterType BySJout \
   --outSAMattributes NH HI AS NM MD \
   --outSAMtype BAM SortedByCoordinate \
-  --quantMode TranscriptomeSAM \
+  --quantMode GeneCounts \
   --sjdbScore 1 \
   --limitBAMsortRAM 20000000000 \
   --outFileNamePrefix map_ERR1769022_
+
 
