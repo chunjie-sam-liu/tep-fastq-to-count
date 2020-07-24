@@ -5,9 +5,9 @@
 # @DESCRIPTION:
 
 # Number of input parameters
-STAR --runThreadN 20 \
+STAR --runThreadN 80 \
   --runMode genomeGenerate \
   --genomeDir /refdata \
-  --genomeFastaFiles /refdata/hg19.fa \
+  --genomeFastaFiles /refdata/hg19-new.fa \
   --sjdbGTFfile /refdata/Homo_sapiens.GRCh37.75.gtf \
   --sjdbOverhang 100
