@@ -10,6 +10,7 @@ RUN apt-get update -qq \
   python3-pip \
   && ln -s /usr/bin/python3.8 /usr/bin/python \
   && ln -s /usr/bin/pip3 /usr/bin/pip \
+  && pip install HTSeq \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
