@@ -12,7 +12,7 @@ docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
   STAR --genomeDir /refdata \
   --readFilesIn ERR1769022_1.fastq.gz ERR1769022_2.fastq.gz \
   --readFilesCommand gunzip -c \
-  --runThreadN 64 \
+  --runThreadN 24 \
   --genomeLoad NoSharedMemory \
   --outFilterMultimapNmax 20 \
   --alignSJoverhangMin 8 \
@@ -31,5 +31,4 @@ docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
   --sjdbScore 1 \
   --limitBAMsortRAM 20000000000 \
   --outFileNamePrefix map_ERR1769022_
-
 
