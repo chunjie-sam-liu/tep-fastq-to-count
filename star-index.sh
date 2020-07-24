@@ -5,9 +5,10 @@
 # @DESCRIPTION:
 
 # Number of input parameters
-STAR --runThreadN 80 \
+docker run -v /workspace/liucj/refdata/star-genome-index:/refdata chunjiesamliu/tep-pipeline:0.1 \
+  STAR --runThreadN 80 \
   --runMode genomeGenerate \
   --genomeDir /refdata \
-  --genomeFastaFiles /refdata/hg19-new.fa \
-  --sjdbGTFfile /refdata/Homo_sapiens.GRCh37.75.gtf \
+  --genomeFastaFiles /refdata/hg19.fa \
+  --sjdbGTFfile /refdata/gencode.v19.annotation.gtf \
   --sjdbOverhang 100
