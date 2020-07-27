@@ -44,7 +44,7 @@ function bam2count {
   chunjiesamliu/tep-pipeline:0.1 \
   htseq-count \
   /home/vault/${gzfile}_Aligned.sortedByCoord.out.bam \
-  /refdata/Homo_sapiens.GRCh37.75-new.gtf > /home/vault/${gzfile}.htseq_count.txt"
+  /refdata/Homo_sapiens.GRCh37.75-new.gtf > ${gzfile}.htseq_count.txt"
   echo $cmd
   eval $cmd
 }
