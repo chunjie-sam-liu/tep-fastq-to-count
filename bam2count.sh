@@ -19,4 +19,4 @@ docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
   chunjiesamliu/tep-pipeline:0.1 \
   htseq-count \
   /home/vault/SRR5019883_1.fastq.gzAligned.sortedByCoord.out.bam \
-  /refdata/Homo_sapiens.GRCh37.75-new.gtf > SRR5019883_1.fastq.gz.htseq_count.txt
+  /refdata/Homo_sapiens.GRCh37.75-new.gtf > 114A.htseq_count.txt
