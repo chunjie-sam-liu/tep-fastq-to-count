@@ -52,8 +52,8 @@ function bam2count {
 for gz in `ls *gz`;
 do
   {
-    map2genome ${gz}
+    # map2genome ${gz}
     bam2count ${gz}
-  } &
+  } 1>${gz}.log 2>${gz}.log &
 done
 
