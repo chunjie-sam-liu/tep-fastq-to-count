@@ -16,11 +16,11 @@ After docker image being pulled, use this pipeline*.sh to transform the fastq fi
 ```shell
 
 # for single end
-bash pipeline-sinle-end.sh -f1 /path/to/fq1.fq -f2 /path/to/fq2.fq -o /path/to/outputdir -r /path/to/refdir
+bash pipeline-sinle-end.sh -f /path/to/single.fq -o /path/to/outputdir -r /path/to/refdir
 
 # for paired end
 
-bash pipeline-sinle-end.sh -f1 /path/to/fq1.fq -f2 /path/to/fq2.fq -o /path/to/outputdir -r /path/to/refdir
+bash pipeline-pair-end.sh -f1 /path/to/fq1.fq -f2 /path/to/fq2.fq -o /path/to/outputdir -r /path/to/refdir
 ```
 
 ## For paralell to run pipeline

@@ -14,7 +14,7 @@ function message {
   echo "        -o|--outpath: Absolute path of Output directory."
   echo "        -r|--refpath: Absolute path of Reference directory"
   echo "Example:"
-  echo "bash pipeline-sinle-end.sh -f1 /path/to/fq1.fq -f2 /path/to/fq2.fq -o /path/to/outputdir -r /path/to/refdir"
+  echo "bash pipeline-pair-end.sh -f1 /path/to/fq1.fq -f2 /path/to/fq2.fq -o /path/to/outputdir -r /path/to/refdir"
 }
 
 function checkfile {
