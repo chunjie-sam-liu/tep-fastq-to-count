@@ -27,10 +27,6 @@ function checkparam {
   [[ ${param} != 6 ]] && message && exit 0
 }
 
-# FASTQFILE
-# OUTPATH
-# REFPATH
-
 function map2genome {
   FASTQPATH=`dirname ${FASTQFILE}`
   FASTQNAME=`basename ${FASTQFILE}`
