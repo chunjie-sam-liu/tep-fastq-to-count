@@ -4,89 +4,92 @@
 # @DATE: 2020-08-12 14:55:15
 # @DESCRIPTION:
 
-# Number of input parameters
-parse_params ()
-{
-    local existing_named
-    local ARGV=() # un-named params
-    local ARGN=() # named params
-    local ARGO=() # options (--params)
-    echo "local ARGV=(); local ARGN=(); local ARGO=();"
-    while [[ "$1" != "" ]]; do
-        # Escape asterisk to prevent bash asterisk expansion, and quotes to prevent string breakage
-        _escaped=${1/\*/\'\"*\"\'}
-        _escaped=${_escaped//\'/\\\'}
-        _escaped=${_escaped//\"/\\\"}
-        # If equals delimited named parameter
-        nonspace="[^[:space:]]"
-        if [[ "$1" =~ ^${nonspace}${nonspace}*=..* ]]; then
-            # Add to named parameters array
-            echo "ARGN+=('$_escaped');"
-            # key is part before first =
-            local _key=$(echo "$1" | cut -d = -f 1)
-            # Just add as non-named when key is empty or contains space
-            if [[ "$_key" == "" || "$_key" =~ " " ]]; then
-                echo "ARGV+=('$_escaped');"
-                shift
-                continue
-            fi
-            # val is everything after key and = (protect from param==value error)
-            local _val="${1/$_key=}"
-            # remove dashes from key name
-            _key=${_key//\-}
-            # skip when key is empty
-            # search for existing parameter name
-            if (echo "$existing_named" | grep "\b$_key\b" >/dev/null); then
-                # if name already exists then it's a multi-value named parameter
-                # re-declare it as an array if needed
-                if ! (declare -p _key 2> /dev/null | grep -q 'declare \-a'); then
-                    echo "$_key=(\"\$$_key\");"
-                fi
-                # append new value
-                echo "$_key+=('$_val');"
-            else
-                # single-value named parameter
-                echo "local $_key='$_val';"
-                existing_named=" $_key"
-            fi
-        # If standalone named parameter
-        elif [[ "$1" =~ ^\-${nonspace}+ ]]; then
-            # remove dashes
-            local _key=${1//\-}
-            # Just add as non-named when key is empty or contains space
-            if [[ "$_key" == "" || "$_key" =~ " " ]]; then
-                echo "ARGV+=('$_escaped');"
-                shift
-                continue
-            fi
-            # Add to options array
-            echo "ARGO+=('$_escaped');"
-            echo "local $_key=\"$_key\";"
-        # non-named parameter
-        else
-            # Escape asterisk to prevent bash asterisk expansion
-            _escaped=${1/\*/\'\"*\"\'}
-            echo "ARGV+=('$_escaped');"
-        fi
-        shift
-    done
+param=$#
+
+function message {
+  echo "Notice: Mapping single end fastq files to human genome."
+  echo "        -f|--fastqfile: Absolute path of fastqfile."
+  echo "        -o|--outpath: Absolute path of Output directory."
+  echo "        -r|--refpath: Absolute path of Reference directory"
+  echo "Example:"
+  echo "bash pipeline-sinle-end.sh -f /path/to/single.fq -o /path/to/outputdir -r /path/to/refdir"
 }
 
-#--------------------------- DEMO OF THE USAGE -------------------------------
-
-show_use ()
-{
-    eval $(parse_params "$@")
-    # --
-    echo "${ARGV[0]}" # print first unnamed param
-    echo "${ARGV[1]}" # print second unnamed param
-    echo "${ARGN[0]}" # print first named param
-    echo "${ARG0[0]}" # print first option param (--force)
-    echo "$anyparam"  # print --anyparam value
-    echo "$k"         # print k=5 value
-    echo "${multivalue[0]}" # print first value of multi-value
-    echo "${multivalue[1]}" # print second value of multi-value
-    [[ "$force" == "force" ]] && echo "\$force is set so let the force be with you"
+function checkfile {
+  [[ -e $1 ]] || {
+    echo "Error: $1 does not exist."
+    message
+    exit 0
+ }
 }
 
-show_use "param 1" --anyparam="my value" param2 k=5 --force --multi-value=test1 --multi-value=test2
+function checkparam {
+  [[ ${param} != 6 ]] && message && exit 0
+}
+
+function map2genome {
+  cmd="docker run -v ${REFPATH}:/refdata \
+  -v /home/liucj/tmp/tep-cancer-cell-2017/fastq-files:/home/vault \
+  chunjiesamliu/tep-pipeline:0.1 \
+  STAR --genomeDir /refdata \
+  --readFilesIn ${FASTQFILE} \
+  --readFilesCommand gunzip -c \
+  --runThreadN 24 \
+  --genomeLoad NoSharedMemory \
+  --outFilterMultimapNmax 20 \
+  --alignSJoverhangMin 8 \
+  --alignSJDBoverhangMin 1 \
+  --outFilterMismatchNmax 999 \
+  --outFilterMismatchNoverReadLmax 0.04 \
+  --alignIntronMin 20 \
+  --alignIntronMax 1000000 \
+  --alignMatesGapMax 1000000 \
+  --outSAMheaderHD @HD VN:1.4 SO:coordinate \
+  --outSAMunmapped Within \
+  --outFilterType BySJout \
+  --outSAMattributes NH HI AS NM MD \
+  --outSAMtype BAM SortedByCoordinate \
+  --quantMode GeneCounts \
+  --sjdbScore 1 \
+  --limitBAMsortRAM 20000000000 \
+  --outFileNamePrefix ${gzfile}_"
+  echo ${cmd}
+  # eval ${cmd}
+}
+
+function bam2count {
+  gzfile=$1
+  cmd="docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
+  -v /home/liucj/tmp/tep-cancer-cell-2017/fastq-files:/home/vault \
+  chunjiesamliu/tep-pipeline:0.1 \
+  htseq-count \
+  /home/vault/${gzfile}_Aligned.sortedByCoord.out.bam \
+  /refdata/Homo_sapiens.GRCh37.75-new.gtf \
+  -c /home/vault/${gzfile}.htseq_count.txt"
+  echo ${cmd}
+  # eval ${cmd}
+}
+
+function main {
+  map2genome
+  # bam2count
+}
+
+
+checkparam
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+      -f|--fastqfile) FASTQFILE="$2"; shift; shift; checkfile ${FASTQFILE};;
+      -o|--outpath) OUTPATH="$2"; shift; shift; checkfile ${OUTPATH};;
+      -r|--refpath) REFPATH="$2"; shift; shift; checkfile ${REFPATH};;
+      *) POSITIONAL+=("$1"); shift;;
+  esac
+done
+set -- "${POSITIONAL[@]}"
+
+main
+
+
