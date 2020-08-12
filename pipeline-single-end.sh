@@ -27,12 +27,20 @@ function checkparam {
   [[ ${param} != 6 ]] && message && exit 0
 }
 
+# FASTQFILE
+# OUTPATH
+# REFPATH
+
 function map2genome {
-  cmd="docker run -v ${REFPATH}:/refdata \
-  -v /home/liucj/tmp/tep-cancer-cell-2017/fastq-files:/home/vault \
+  FASTQPATH=`dirname ${FASTQFILE}`
+  FASTQNAME=`basename ${FASTQFILE}`
+  cmd="docker run \
+  -v ${REFPATH}:/refdata \
+  -v ${FASTQPATH}:/home/vault \
+  -v ${OUTPATH}:/output \
   chunjiesamliu/tep-pipeline:0.1 \
   STAR --genomeDir /refdata \
-  --readFilesIn ${FASTQFILE} \
+  --readFilesIn ${FASTQNAME} \
   --readFilesCommand gunzip -c \
   --runThreadN 24 \
   --genomeLoad NoSharedMemory \
@@ -52,27 +60,31 @@ function map2genome {
   --quantMode GeneCounts \
   --sjdbScore 1 \
   --limitBAMsortRAM 20000000000 \
-  --outFileNamePrefix ${gzfile}_"
+  --outFileNamePrefix /output/${FASTQNAME}_"
   echo ${cmd}
-  # eval ${cmd}
+  eval ${cmd}
 }
 
 function bam2count {
-  gzfile=$1
-  cmd="docker run -v /workspace/liucj/refdata/star-genome-index-new:/refdata \
-  -v /home/liucj/tmp/tep-cancer-cell-2017/fastq-files:/home/vault \
+  FASTQNAME=`basename ${FASTQFILE}`
+  cmd="docker run \
+  -v ${REFPATH}:/refdata \
+  -v ${OUTPATH}:/output \
   chunjiesamliu/tep-pipeline:0.1 \
   htseq-count \
-  /home/vault/${gzfile}_Aligned.sortedByCoord.out.bam \
+  /output/${FASTQNAME}_Aligned.sortedByCoord.out.bam \
   /refdata/Homo_sapiens.GRCh37.75-new.gtf \
-  -c /home/vault/${gzfile}.htseq_count.txt"
+  -c /output/${FASTQNAME}.htseq_count.txt"
   echo ${cmd}
-  # eval ${cmd}
+  eval ${cmd}
 }
 
 function main {
-  map2genome
-  # bam2count
+  FASTQNAME=`basename ${FASTQFILE}`
+  {
+    map2genome
+    bam2count
+  } 1>${OUTPATH}/${FASTQNAME}.log 2>${OUTPATH}/${FASTQNAME}.log
 }
 
 
