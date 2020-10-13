@@ -55,7 +55,7 @@ function bam2count {
   --nonunique=none \
   --secondary-alignments=score \
   --supplementary-alignments=score \
-  -c /home/vault/${gzfile}.htseq_count.txt"
+  -c /home/vault/${gzfile}.htseq_count.txt &"
   echo $cmd
   eval $cmd
 }
