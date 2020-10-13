@@ -45,6 +45,16 @@ function bam2count {
   htseq-count \
   /home/vault/${gzfile}_Aligned.sortedByCoord.out.bam \
   /refdata/Homo_sapiens.GRCh37.75-new.gtf \
+  -f bam \
+  -r pos \
+  -s no \
+  -a 10 \
+  -t exon \
+  -i gene_id \
+  -m intersection-nonempty \
+  --nonunique=none \
+  --secondary-alignments=score \
+  --supplementary-alignments=score \
   -c /home/vault/${gzfile}.htseq_count.txt"
   echo $cmd
   eval $cmd
